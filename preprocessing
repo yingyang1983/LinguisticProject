@@ -1,0 +1,32 @@
+----
+------
+E=cell(1,96);
+for i=1:96
+    for j=1:length(NEV.Data.Spikes.Electrode)
+        if NEV.Data.Spikes.Electrode(j)==i
+            E{i}=[E{i},NEV.Data.Spikes.TimeStamp(j)];
+        else
+        end
+    end
+end
+Trials=struct([]);
+
+
+for m=1:2:68
+        for i=1:96
+            for j=1:length(E{i})
+                if E{i}(j)>=NEV.Data.SerialDigitalIO.TimeStamp(m)&E{i}(j)<=NEV.Data.SerialDigitalIO.TimeStamp(m+2)
+                    Trials((m+1)/2).E{i}(j)=E{i}(j)
+                else 
+                end
+            end
+        end
+end
+    
+%for i=1:34
+  %j=Cell_1{1,i}
+   %Cell_2(:,j)=Cell_1(:,i)
+%end
+for p=1:34
+    Trials(p).LinPara=Cell_2(:,1)
+end
