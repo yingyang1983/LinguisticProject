@@ -1,4 +1,3 @@
-
 step = 500*30;
 width = 1000*30;
 
@@ -133,7 +132,8 @@ for i = 1:96
       
     end   
 end
-% set the last two columns as wordnum and wordtype.
+% set the last four columns as wordnum and wordtype, two for session 1 and two for session 2.
+load('105307-trialsPC1');
 foot = [11,12,13,14,17,18,25,27,28,32];
 hand = [4,5,9,10,16,19,20,22,24,26,29,30,31,33];
 mouth = [1,2,3,6,7,8,15,21,23,34];
@@ -155,6 +155,29 @@ for i=1:192
    alignsession2{i}(1:34,q2(i)+1) = wordnum;
    alignsession2{i}(1:34,q2(i)+2) = wordtype;
 end
+%
+load('134159-trialsPC1');
+foot = [11,12,13,14,17,18,25,27,28,32];
+hand = [4,5,9,10,16,19,20,22,24,26,29,30,31,33];
+mouth = [1,2,3,6,7,8,15,21,23,34];
+wordnum = [];
+wordtype = [];
+wordnum = NEV.Data.SerialDigitalIO.UnparsedData(2:2:68);
+for j = 1:34
+      if ismember(wordnum(j),foot)==1
+          wordtype(j) = 1;
+      elseif ismember(wordnum(j),hand)==1
+          wordtype(j) = 2;
+      elseif ismember(wordnum(j),mouth)==1
+          wordtype(j) = 3;
+      end
+end
+for i=1:192
+   alignsession1{i}(1:34,q1(i)+3) = wordnum;
+   alignsession1{i}(1:34,q1(i)+4) = wordtype;
+   alignsession2{i}(1:34,q2(i)+3) = wordnum;
+   alignsession2{i}(1:34,q2(i)+4) = wordtype;
+end
 % do ANOVA for each window of each electrode.
 pslide1 = cell(1,length(sigslct1org));
 Fslide1 = cell(1,length(sigslct1org));
@@ -170,7 +193,7 @@ pslide2 = cell(1,length(sigslct2org));
 Fslide2 = cell(1,length(sigslct2org));
 for i = 1:length(sigslct2org)
     for k = 1:q2(i)
-       [p,table] = anova1(alignsession2{i}(1:34,k),alignsession2{i}(1:34,q2(i)+2),'off');
+       [p,table] = anova1(alignsession2{i}(1:34,k),alignsession2{i}(1:34,q2(i)+4),'off');
        pslide2{i}(k) = p;
        Fslide2{i}(k) = table{2,5}; 
     end
